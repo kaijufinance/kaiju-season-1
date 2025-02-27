@@ -6,7 +6,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 import { MultiTokenVaultsUpgradable } from "./MultiTokenVaultsUpgradable.sol";
 
-contract KaijuSeason1Vaults is Initializable, UUPSUpgradeable, UpgradableMultiTokenVaults
+contract KaijuSeason1Vaults is Initializable, UUPSUpgradeable, MultiTokenVaultsUpgradable
 {
     function initialize(address aaveAddress) public initializer 
     {
