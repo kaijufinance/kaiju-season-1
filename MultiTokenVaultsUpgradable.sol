@@ -9,16 +9,16 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { IAAVE } from "./interfaces/IAAVE.sol";
-import { TokenVaultUpgradeable } from "./TokenVaultUpgradeable.sol";
+import { TokenVault } from "./TokenVault.sol";
 
-contract UpgradableMultiTokenVaults is Initializable, AccessControlUpgradeable, OwnableUpgradeable//, UUPSUpgradeable 
+abstract contract MultiTokenVaultsUpgradable is Initializable, AccessControlUpgradeable, OwnableUpgradeable//, UUPSUpgradeable 
 {
     enum BucketType { STORE, AAVE }
 
     /// @custom:storage-location erc7201:openzeppelin.storage.ERC4626
     struct UpgradableMultiTokenVaultsUpgradeableStorage 
     {
-        mapping(address => TokenVaultUpgradeable) vaults;
+        mapping(address => TokenVault) vaults;
         address aaveAddress;
     }
 
@@ -58,7 +58,7 @@ contract UpgradableMultiTokenVaults is Initializable, AccessControlUpgradeable, 
         require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "Must have vault manager role to burn");
         require(address($.vaults[token]) == address(0), "Vault already exists");
 
-        TokenVaultUpgradeable newVault = new TokenVaultUpgradeable();
+        TokenVault newVault = new TokenVault();
         newVault.initialize(IERC20(token));
         $.vaults[token] = newVault;
 
@@ -69,7 +69,7 @@ contract UpgradableMultiTokenVaults is Initializable, AccessControlUpgradeable, 
     {
         UpgradableMultiTokenVaultsUpgradeableStorage storage $ = _getUpgradableMultiTokenVaultsUpgradeableStorage();
 
-        TokenVaultUpgradeable vault = $.vaults[token];
+        TokenVault vault = $.vaults[token];
         require(address(vault) != address(0), "Vault does not exist");
 
         IERC20(token).transferFrom(_msgSender(), address(this), amount);
@@ -95,7 +95,7 @@ contract UpgradableMultiTokenVaults is Initializable, AccessControlUpgradeable, 
     {
         UpgradableMultiTokenVaultsUpgradeableStorage storage $ = _getUpgradableMultiTokenVaultsUpgradeableStorage();
 
-        TokenVaultUpgradeable vault = $.vaults[token];
+        TokenVault vault = $.vaults[token];
 
         vault.claimYield();
         vault.withdrawYield(receiver);
