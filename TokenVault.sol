@@ -12,7 +12,7 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol"
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { IAAVE } from "./interfaces/IAAVE.sol";
 
-contract TokenVaultUpgradeable is Initializable, OwnableUpgradeable, ERC4626Upgradeable, ReentrancyGuardUpgradeable 
+contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, ReentrancyGuardUpgradeable 
 {
     function initialize(IERC20 asset) public initializer {
         __ERC4626_init(asset);
