@@ -13,8 +13,6 @@ import { TokenVault } from "./TokenVault.sol";
 
 abstract contract MultiTokenVaultsUpgradable is Initializable, AccessControlUpgradeable, OwnableUpgradeable//, UUPSUpgradeable 
 {
-    enum BucketType { STORE, AAVE }
-
     /// @custom:storage-location erc7201:openzeppelin.storage.ERC4626
     struct UpgradableMultiTokenVaultsUpgradeableStorage 
     {
@@ -28,11 +26,6 @@ abstract contract MultiTokenVaultsUpgradable is Initializable, AccessControlUpgr
     event VaultCreated(address indexed token, address vault);
     event Deposit(address indexed user, address indexed token, uint256 amount);
     event Withdrawal(address indexed user, address indexed token, uint256 amount);
-
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() {
-        _disableInitializers();
-    }
 
     function _getUpgradableMultiTokenVaultsUpgradeableStorage() private pure returns (UpgradableMultiTokenVaultsUpgradeableStorage storage $) {
         assembly {
