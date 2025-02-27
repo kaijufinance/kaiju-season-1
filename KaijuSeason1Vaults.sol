@@ -8,6 +8,11 @@ import { MultiTokenVaultsUpgradable } from "./MultiTokenVaultsUpgradable.sol";
 
 contract KaijuSeason1Vaults is Initializable, UUPSUpgradeable, MultiTokenVaultsUpgradable
 {
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+    
     function initialize(address aaveAddress) public initializer 
     {
         __Ownable_init(_msgSender());
