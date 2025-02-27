@@ -66,10 +66,10 @@ contract TokenVaultUpgradeable is Initializable, OwnableUpgradeable, ERC4626Upgr
     function _withdrawFromPool(address token, uint256 amount, address tokenVaultAddress) internal 
     {
         // Withdraw to user 
-        IAAVE(asset()).withdraw(token, amount, msg.sender);
+        IAAVE(asset()).withdraw(token, amount, _msgSender());
 
         // Fire event
-        emit AAVEWithdrawn(msg.sender, token, amount, tokenVaultAddress);
+        emit AAVEWithdrawn(_msgSender(), token, amount, tokenVaultAddress);
     }  
 
     function _supplyToPool(address token, uint256 amount, address tokenVaultAddress) internal 
@@ -78,6 +78,6 @@ contract TokenVaultUpgradeable is Initializable, OwnableUpgradeable, ERC4626Upgr
         IAAVE(asset()).supply(token, amount, tokenVaultAddress, 0);
 
         // Fire event
-        emit AAVESupplied(msg.sender, token, amount, tokenVaultAddress);
+        emit AAVESupplied(_msgSender(), token, amount, tokenVaultAddress);
     }
 }
