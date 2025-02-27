@@ -11,19 +11,19 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { IAAVE } from "./interfaces/IAAVE.sol";
 import { TokenVaultUpgradeable } from "./TokenVaultUpgradeable.sol";
 
-contract MultiTokenBucketMiniVaultsUpgradeable is Initializable, AccessControlUpgradeable, OwnableUpgradeable//, UUPSUpgradeable 
+contract UpgradableMultiTokenVaults is Initializable, AccessControlUpgradeable, OwnableUpgradeable//, UUPSUpgradeable 
 {
     enum BucketType { STORE, AAVE }
 
     /// @custom:storage-location erc7201:openzeppelin.storage.ERC4626
-    struct MultiTokenBucketMiniVaultsUpgradeableStorage 
+    struct UpgradableMultiTokenVaultsUpgradeableStorage 
     {
         mapping(address => TokenVaultUpgradeable) vaults;
         address aaveAddress;
     }
 
-    // keccak256(abi.encode(uint256(keccak256("kaijufinance.storage.MultiTokenBucketMiniVaultsUpgradeable")) - 1)) & ~bytes32(uint256(0xff))
-    bytes32 private constant MultiTokenBucketMiniVaultsUpgradeableStorageLocation = 0x2ca894d92e142fff7d00380311aa1e74c80eae52fdc58bc3f307e90a6ec91600;
+    // keccak256(abi.encode(uint256(keccak256("kaijufinance.storage.UpgradableMultiTokenVaultsUpgradeable")) - 1)) & ~bytes32(uint256(0xff))
+    bytes32 private constant UpgradableMultiTokenVaultsUpgradeableStorageLocation = 0x2ca894d92e142fff7d00380311aa1e74c80eae52fdc58bc3f307e90a6ec91600;
 
     event VaultCreated(address indexed token, address vault);
     event Deposit(address indexed user, address indexed token, uint256 amount);
@@ -34,28 +34,28 @@ contract MultiTokenBucketMiniVaultsUpgradeable is Initializable, AccessControlUp
         _disableInitializers();
     }
 
-    function _getMultiTokenBucketMiniVaultsUpgradeableStorage() private pure returns (MultiTokenBucketMiniVaultsUpgradeableStorage storage $) {
+    function _getUpgradableMultiTokenVaultsUpgradeableStorage() private pure returns (UpgradableMultiTokenVaultsUpgradeableStorage storage $) {
         assembly {
-            $.slot := MultiTokenBucketMiniVaultsUpgradeableStorageLocation
+            $.slot := UpgradableMultiTokenVaultsUpgradeableStorageLocation
         }
     }
 
-    function __MultiTokenBucketMiniVaultsUpgradeable_init(address aaveAddress) internal onlyInitializing 
+    function __UpgradableMultiTokenVaults_init(address aaveAddress) internal onlyInitializing 
     {
-        __MultiTokenBucketMiniVaultsUpgradeable_init_unchained(aaveAddress);
+        __UpgradableMultiTokenVaults_init_unchained(aaveAddress);
     }
 
-    function __MultiTokenBucketMiniVaultsUpgradeable_init_unchained(address aaveAddress) internal onlyInitializing 
+    function __UpgradableMultiTokenVaults_init_unchained(address aaveAddress) internal onlyInitializing 
     {
-        MultiTokenBucketMiniVaultsUpgradeableStorage storage $ = _getMultiTokenBucketMiniVaultsUpgradeableStorage();  
+        UpgradableMultiTokenVaultsUpgradeableStorage storage $ = _getUpgradableMultiTokenVaultsUpgradeableStorage();  
         $.aaveAddress = aaveAddress;
     }
 
     function createVault(address token) external 
     {
-        MultiTokenBucketMiniVaultsUpgradeableStorage storage $ = _getMultiTokenBucketMiniVaultsUpgradeableStorage();
+        UpgradableMultiTokenVaultsUpgradeableStorage storage $ = _getUpgradableMultiTokenVaultsUpgradeableStorage();
 
-        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Must have vault manager role to burn");
+        require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "Must have vault manager role to burn");
         require(address($.vaults[token]) == address(0), "Vault already exists");
 
         TokenVaultUpgradeable newVault = new TokenVaultUpgradeable();
@@ -67,33 +67,33 @@ contract MultiTokenBucketMiniVaultsUpgradeable is Initializable, AccessControlUp
 
     function deposit(address token, uint256 amount) external 
     {
-        MultiTokenBucketMiniVaultsUpgradeableStorage storage $ = _getMultiTokenBucketMiniVaultsUpgradeableStorage();
+        UpgradableMultiTokenVaultsUpgradeableStorage storage $ = _getUpgradableMultiTokenVaultsUpgradeableStorage();
 
         TokenVaultUpgradeable vault = $.vaults[token];
         require(address(vault) != address(0), "Vault does not exist");
 
-        IERC20(token).transferFrom(msg.sender, address(this), amount);
+        IERC20(token).transferFrom(_msgSender(), address(this), amount);
         IERC20(token).approve(address(vault), amount);
-        vault.deposit(amount, msg.sender);
+        vault.deposit(amount, _msgSender());
 
-        emit Deposit(msg.sender, token, amount);
+        emit Deposit(_msgSender(), token, amount);
     }
 
     function withdraw(address token, address receiver, uint256 shares) external
     {
-        MultiTokenBucketMiniVaultsUpgradeableStorage storage $ = _getMultiTokenBucketMiniVaultsUpgradeableStorage();
+        UpgradableMultiTokenVaultsUpgradeableStorage storage $ = _getUpgradableMultiTokenVaultsUpgradeableStorage();
 
         require(address($.vaults[token]) != address(0), "Vault does not exist");
 
         uint256 amount = $.vaults[token].convertToAssets(shares);
-        $.vaults[token].withdraw(amount, receiver, msg.sender);
+        $.vaults[token].withdraw(amount, receiver, _msgSender());
 
-        emit Withdrawal(msg.sender, token, amount);
+        emit Withdrawal(_msgSender(), token, amount);
     }
 
     function claimRewards(address token, address receiver) onlyOwner external
     {
-        MultiTokenBucketMiniVaultsUpgradeableStorage storage $ = _getMultiTokenBucketMiniVaultsUpgradeableStorage();
+        UpgradableMultiTokenVaultsUpgradeableStorage storage $ = _getUpgradableMultiTokenVaultsUpgradeableStorage();
 
         TokenVaultUpgradeable vault = $.vaults[token];
 
