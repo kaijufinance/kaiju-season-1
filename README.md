@@ -43,7 +43,14 @@ Deployers Address: [0x61E8CDFe71851717e5D3382F61Cd70f7B8Dc6039](https://sepolia.
 
 ### Test Deploy/Setup Steps :construction_worker:
 
-TBC.
+#### Configuration Contracts
+
+| Contract      | Address       | Network       |
+| ------------- | ------------- | ------------- |
+| AAVE Pool Proxy |  [0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951)](https://sepolia.etherscan.io/address/0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951#readProxyContract)   | Sepolia       | 
+| USDC | [0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8](https://sepolia.etherscan.io/address/0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8)   | Sepolia       | 
+
+Calling the AAVE Pool, we can get all the supported reserve addresses (getReservesList). 
 
 ### Notes :clipboard:
 
