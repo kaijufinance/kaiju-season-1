@@ -53,6 +53,7 @@ Step 1. TBC.
 | ------------- | ------------- | ------------- |
 | AAVE Pool Proxy |  [0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951)](https://sepolia.etherscan.io/address/0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951#readProxyContract)   | Sepolia       | 
 | USDC (ERC20) | [0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8](https://sepolia.etherscan.io/address/0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8)   | Sepolia       | 
+| aUSDC (ERC20) | [0x03240b49b835ec77adaa76516de879498a3f76ec](https://sepolia.etherscan.io/address/0x03240b49b835ec77adaa76516de879498a3f76ec)   | Sepolia       | 
 | DAI (ERC20) |  [0xFF34B3d4Aee8ddCd6F9AFFFB6Fe49bD371b8a357](https://sepolia.etherscan.io/address/0xFF34B3d4Aee8ddCd6F9AFFFB6Fe49bD371b8a357)  | Sepolia       | 
 | LINK (ERC20) |  [0xf8Fb3713D459D7C1018BD0A49D19b4C44290EBE5](https://sepolia.etherscan.io/address/0xf8Fb3713D459D7C1018BD0A49D19b4C44290EBE5)  | Sepolia       | 
 | USDT (ERC20) |  [0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8](https://sepolia.etherscan.io/address/0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8)  | Sepolia       | 
