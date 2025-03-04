@@ -11,7 +11,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { IAAVE } from "./interfaces/IAAVE.sol";
 import { TokenVault } from "./TokenVault.sol";
 
-abstract contract MultiTokenVaultsUpgradable is Initializable, AccessControlUpgradeable, OwnableUpgradeable//, UUPSUpgradeable 
+abstract contract MultiTokenVaultsUpgradable is Initializable, AccessControlUpgradeable, ReentrancyGuardUpgradeable, OwnableUpgradeable, UUPSUpgradeable 
 {
     /// @custom:storage-location erc7201:openzeppelin.storage.ERC4626
     struct UpgradableMultiTokenVaultsUpgradeableStorage 
@@ -33,38 +33,48 @@ abstract contract MultiTokenVaultsUpgradable is Initializable, AccessControlUpgr
         }
     }
 
-    function __UpgradableMultiTokenVaults_init(address aaveAddress) internal onlyInitializing 
+    function __UpgradableMultiTokenVaults_init() internal onlyInitializing 
     {
-        __UpgradableMultiTokenVaults_init_unchained(aaveAddress);
+        __UpgradableMultiTokenVaults_init_unchained();
     }
 
-    function __UpgradableMultiTokenVaults_init_unchained(address aaveAddress) internal onlyInitializing 
-    {
-        UpgradableMultiTokenVaultsUpgradeableStorage storage $ = _getUpgradableMultiTokenVaultsUpgradeableStorage();  
-        $.aaveAddress = aaveAddress;
+    function __UpgradableMultiTokenVaults_init_unchained() internal onlyInitializing 
+    { 
     }
 
-    function createVault(address token) external 
+    /*function createVault(address token) onlyOwner external 
     {
         UpgradableMultiTokenVaultsUpgradeableStorage storage $ = _getUpgradableMultiTokenVaultsUpgradeableStorage();
 
-        require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "Must have vault manager role to burn");
+        //require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "Must have vault manager role to create vault");
         require(address($.vaults[token]) == address(0), "Vault already exists");
 
         TokenVault newVault = new TokenVault();
-        newVault.initialize(IERC20(token));
+        newVault.initialize(IERC20(token), $.aaveAddress);
         $.vaults[token] = newVault;
 
         emit VaultCreated(token, address(newVault));  
+    }*/
+
+    function createVault(address token, address vault) onlyOwner external 
+    {
+        UpgradableMultiTokenVaultsUpgradeableStorage storage $ = _getUpgradableMultiTokenVaultsUpgradeableStorage();
+
+        //require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "Must have vault manager role to create vault");
+        require(address($.vaults[token]) == address(0), "Vault already exists");
+
+        $.vaults[token] = TokenVault(vault);
+
+        emit VaultCreated(token, address(vault));  
     }
 
-    function deposit(address token, uint256 amount) external 
+    function deposit(address token, uint256 amount) external nonReentrant 
     {
         UpgradableMultiTokenVaultsUpgradeableStorage storage $ = _getUpgradableMultiTokenVaultsUpgradeableStorage();
 
         TokenVault vault = $.vaults[token];
         require(address(vault) != address(0), "Vault does not exist");
-
+        
         IERC20(token).transferFrom(_msgSender(), address(this), amount);
         IERC20(token).approve(address(vault), amount);
         vault.deposit(amount, _msgSender());
@@ -72,7 +82,7 @@ abstract contract MultiTokenVaultsUpgradable is Initializable, AccessControlUpgr
         emit Deposit(_msgSender(), token, amount);
     }
 
-    function withdraw(address token, address receiver, uint256 shares) external
+    function withdraw(address token, address receiver, uint256 shares) external nonReentrant
     {
         UpgradableMultiTokenVaultsUpgradeableStorage storage $ = _getUpgradableMultiTokenVaultsUpgradeableStorage();
 
@@ -103,8 +113,8 @@ abstract contract MultiTokenVaultsUpgradable is Initializable, AccessControlUpgr
         require(role != DEFAULT_ADMIN_ROLE, "Cannot remove DEFAULT_ADMIN_ROLE");
         revokeRole(role, account);
     }
-
-    //function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
+ 
+    function _authorizeUpgrade(address newImplementation) internal virtual override onlyOwner {}
 
     function supportsInterface(bytes4 interfaceId)
         public
