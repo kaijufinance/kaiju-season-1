@@ -38,8 +38,8 @@ Deployers Address: [0x61E8CDFe71851717e5D3382F61Cd70f7B8Dc6039](https://sepolia.
 | ------------- | ------------- | ------------- |
 | Kaiju Vaults Proxy | [0xbcbd735a5b007a9356824a2dc64cbd0443d9cf89](https://sepolia.etherscan.io/address/0xbcbd735a5b007a9356824a2dc64cbd0443d9cf89#code)     | Sepolia       | 
 | Kaiju Vaults (Upgradable) | [0x6F9D26A8fC01BBa5F1A28345812D578f26d1b93d](https://sepolia.etherscan.io/address/0x6F9D26A8fC01BBa5F1A28345812D578f26d1b93d#code)     | Sepolia       | 
-| Kaiju USDC Vault Proxy | [](https://sepolia.etherscan.io/address/#code)     | Sepolia       | 
-| Kaiju USDC Vault (Upgradable) | [](https://sepolia.etherscan.io/address/#code)     | Sepolia       | 
+| Kaiju USDC Vault Proxy | [0xbcbd735a5b007a9356824a2dc64cbd0443d9cf89](https://sepolia.etherscan.io/address/#code)     | Sepolia       | 
+| Kaiju USDC Vault (Upgradable) | [0x8b316b9cf9acd193cf60e789d03a9083a5362b17](https://sepolia.etherscan.io/address/0x8b316b9cf9acd193cf60e789d03a9083a5362b17#code)     | Sepolia       | 
 | Kaiju WETH Vault Proxy | [](https://sepolia.etherscan.io/address/#code)     | Sepolia       | 
 | Kaiju WETH Vault (Upgradable) | [](https://sepolia.etherscan.io/address/#code)     | Sepolia       | 
 
@@ -51,7 +51,7 @@ Step 1. TBC.
 
 | Contract      | Address       | Network       |
 | ------------- | ------------- | ------------- |
-| AAVE Pool Proxy |  [0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951)](https://sepolia.etherscan.io/address/0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951#readProxyContract)   | Sepolia       | 
+| AAVE Pool Proxy |  [0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951](https://sepolia.etherscan.io/address/0x6Ae43d3271ff6888e7Fc43Fd7321a503ff738951#readProxyContract)   | Sepolia       | 
 | USDC (ERC20) | [0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8](https://sepolia.etherscan.io/address/0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8)   | Sepolia       | 
 | aUSDC (ERC20) | [0x03240b49b835ec77adaa76516de879498a3f76ec](https://sepolia.etherscan.io/address/0x03240b49b835ec77adaa76516de879498a3f76ec)   | Sepolia       | 
 | DAI (ERC20) |  [0xFF34B3d4Aee8ddCd6F9AFFFB6Fe49bD371b8a357](https://sepolia.etherscan.io/address/0xFF34B3d4Aee8ddCd6F9AFFFB6Fe49bD371b8a357)  | Sepolia       | 
