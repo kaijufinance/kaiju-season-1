@@ -30,6 +30,7 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         __ERC4626_init(asset);
         __ERC20_init(name, symbol);
         __ReentrancyGuard_init();
+        __Ownable_init(_msgSender());
 
         _aavePoolAddress = aavePoolAddress;
         _aaveRewardsControllerAddress = aaveRewardsControllerAddress;
