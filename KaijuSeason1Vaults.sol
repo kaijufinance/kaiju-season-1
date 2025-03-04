@@ -13,12 +13,13 @@ contract KaijuSeason1Vaults is Initializable, UUPSUpgradeable, MultiTokenVaultsU
         _disableInitializers();
     }
     
-    function initialize(address aaveAddress) public initializer 
+    function initialize() public initializer 
     {
         __Ownable_init(_msgSender());
         __UUPSUpgradeable_init();
-        __UpgradableMultiTokenVaults_init(aaveAddress);
+        __UpgradableMultiTokenVaults_init();
+        __ReentrancyGuard_init();
     }
 
-    function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
+    function _authorizeUpgrade(address newImplementation) internal override(UUPSUpgradeable, MultiTokenVaultsUpgradable) onlyOwner {}
 }
