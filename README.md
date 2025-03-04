@@ -43,6 +43,8 @@ Deployers Address: [0x61E8CDFe71851717e5D3382F61Cd70f7B8Dc6039](https://sepolia.
 
 ### Test Deploy/Setup Steps :construction_worker:
 
+Step 1. TBC.
+
 #### Configuration Contracts
 
 | Contract      | Address       | Network       |
