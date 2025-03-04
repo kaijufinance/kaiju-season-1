@@ -10,20 +10,35 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import { IAAVE } from "./interfaces/IAAVE.sol";
+import { IPool } from "@aave/core-v3/contracts/interfaces/IPool.sol";
+import { DataTypes } from "@aave/core-v3/contracts/protocol/libraries/types/DataTypes.sol";
+import { IRewardsController } from "@aave/periphery-v3/contracts/rewards/interfaces/IRewardsController.sol";
 
-contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, ReentrancyGuardUpgradeable 
+contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, ReentrancyGuardUpgradeable, UUPSUpgradeable
 {
-    function initialize(IERC20 asset) public initializer {
+    address public _aavePoolAddress;
+    address public _aaveRewardsControllerAddress;
+
+    function initialize(
+        IERC20 asset, 
+        string memory name, 
+        string memory symbol, 
+        address aavePoolAddress,
+        address aaveRewardsControllerAddress
+    ) public initializer 
+    {
         __ERC4626_init(asset);
-        __ERC20_init("Test Vault Token", "TSTvTKN");
+        __ERC20_init(name, symbol);
         __ReentrancyGuard_init();
+
+        _aavePoolAddress = aavePoolAddress;
+        _aaveRewardsControllerAddress = aaveRewardsControllerAddress;
     }
 
     event AAVESupplied(address indexed user, address indexed token, uint256 amount, address tokenVaultAddress);
     event AAVEWithdrawn(address indexed user, address indexed token, uint256 amount, address tokenVaultAddress);
 
-    function deposit(uint256 assets, address receiver) public override returns (uint256) {
+    function deposit(uint256 assets, address receiver) public nonReentrant override returns (uint256) {
         uint256 maxAssets = maxDeposit(receiver);
         if (assets > maxAssets) {
             revert ERC4626ExceededMaxDeposit(receiver, assets, maxAssets);
@@ -32,18 +47,19 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         uint256 shares = previewDeposit(assets);
         _deposit(_msgSender(), receiver, assets, shares);
 
-       _supplyToPool(asset(), assets, address(this));
+        IERC20(asset()).approve(_aavePoolAddress, assets);
+       _supplyToPool(assets, address(this));
 
         return shares;
     }
 
-    function withdraw(uint256 assets, address receiver, address owner) public override returns (uint256) {
+    function withdraw(uint256 assets, address receiver, address owner) public nonReentrant override returns (uint256) {
         uint256 maxAssets = maxWithdraw(owner);
         if (assets > maxAssets) {
             revert ERC4626ExceededMaxWithdraw(owner, assets, maxAssets);
         }
 
-        _withdrawFromPool(asset(), assets, receiver);
+        _withdrawFromPool(assets, receiver);
 
         uint256 shares = previewWithdraw(assets);
         _withdraw(_msgSender(), receiver, owner, assets, shares);
@@ -53,7 +69,15 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
 
     function claimYield() public onlyOwner 
     {
-        IAAVE(asset()).claimRewards(address(this), type(uint256).max);
+        address[] memory assets = new address[](1);
+        assets[0] = asset();
+
+        IRewardsController(_aaveRewardsControllerAddress).claimRewards(
+            assets,
+            type(uint256).max,
+            msg.sender,
+            address(this)
+        );
     }
 
     function withdrawYield(address receiver) public onlyOwner {
@@ -63,21 +87,27 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         require(success, "Failed to send Ether");
     }
 
-    function _withdrawFromPool(address token, uint256 amount, address tokenVaultAddress) internal 
+    function _withdrawFromPool(uint256 amount, address receiver) internal nonReentrant  
     {
-        // Withdraw to user 
-        IAAVE(asset()).withdraw(token, amount, _msgSender());
+        // Appprove IPool to burn lsts
+        DataTypes.ReserveData memory reserveData = IPool(_aavePoolAddress).getReserveData(asset());
+        IERC20(reserveData.aTokenAddress).approve(_aavePoolAddress, amount);
 
+        // Withdraw to user 
+        IPool(_aavePoolAddress).withdraw(asset(), amount, receiver);
+        
         // Fire event
-        emit AAVEWithdrawn(_msgSender(), token, amount, tokenVaultAddress);
+        emit AAVEWithdrawn(_msgSender(), asset(), amount, address(this));
     }  
 
-    function _supplyToPool(address token, uint256 amount, address tokenVaultAddress) internal 
+    function _supplyToPool(uint256 amount, address tokenVaultAddress) internal nonReentrant
     {
         // Supply AAVE
-        IAAVE(asset()).supply(token, amount, tokenVaultAddress, 0);
+        IPool(_aavePoolAddress).supply(asset(), amount, tokenVaultAddress, 0);
 
         // Fire event
-        emit AAVESupplied(_msgSender(), token, amount, tokenVaultAddress);
+        emit AAVESupplied(_msgSender(), asset(), amount, tokenVaultAddress);
     }
+
+    function _authorizeUpgrade(address newImplementation) internal override(UUPSUpgradeable) onlyOwner {}
 }
