@@ -38,8 +38,8 @@ Deployers Address: [0x61E8CDFe71851717e5D3382F61Cd70f7B8Dc6039](https://sepolia.
 | ------------- | ------------- | ------------- |
 | Kaiju Vaults Proxy | [0xbcbd735a5b007a9356824a2dc64cbd0443d9cf89](https://sepolia.etherscan.io/address/0xbcbd735a5b007a9356824a2dc64cbd0443d9cf89#code)     | Sepolia       | 
 | Kaiju Vaults (Upgradable) | [0x6F9D26A8fC01BBa5F1A28345812D578f26d1b93d](https://sepolia.etherscan.io/address/0x6F9D26A8fC01BBa5F1A28345812D578f26d1b93d#code)     | Sepolia       | 
-| Kaiju USDC Vault Proxy | [0xba03382e8321cb1f77144833a66b7936f781801c](https://sepolia.etherscan.io/address/0xba03382e8321cb1f77144833a66b7936f781801c#code)     | Sepolia       | 
-| Kaiju USDC Vault (Upgradable) | [0xb0f4d5e5615f083064d6cc478923b290a87318a7](https://sepolia.etherscan.io/address/0xb0f4d5e5615f083064d6cc478923b290a87318a7#code)     | Sepolia       | 
+| Kaiju USDC Vault Proxy |  [0xb0f4d5e5615f083064d6cc478923b290a87318a7](https://sepolia.etherscan.io/address/0xb0f4d5e5615f083064d6cc478923b290a87318a7#code)    | Sepolia       | 
+| Kaiju USDC Vault (Upgradable) | [0xba03382e8321cb1f77144833a66b7936f781801c](https://sepolia.etherscan.io/address/0xba03382e8321cb1f77144833a66b7936f781801c#code)     | Sepolia       | 
 | Kaiju WETH Vault Proxy | [](https://sepolia.etherscan.io/address/#code)     | Sepolia       | 
 | Kaiju WETH Vault (Upgradable) | [](https://sepolia.etherscan.io/address/#code)     | Sepolia       | 
 
