@@ -47,7 +47,7 @@ Deployers Address: [0x61E8CDFe71851717e5D3382F61Cd70f7B8Dc6039](https://sepolia.
 
 Step 1. TBC.
 
-https://app.aave.com/
+[USDC Faucet](https://app.aave.com/faucet/)
 
 #### Configuration Contracts
 
