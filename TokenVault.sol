@@ -75,6 +75,8 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
             revert ERC4626ExceededMaxWithdraw(owner, assets, maxAssets);
         }
 
+        _withdrawFromPool(assets);
+
         uint256 shares = previewWithdraw(assets);
         _withdraw(
             _msgSender(), 
@@ -83,8 +85,6 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
             assets, 
             shares
         );
-
-        _withdrawFromPool(assets, receiver);
 
         return shares;
     }
@@ -112,7 +112,7 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         payable(receiver).transfer(amount);
     }
 
-    function _withdrawFromPool(uint256 amount, address receiver) internal  
+    function _withdrawFromPool(uint256 amount) internal  
     {
         DataTypes.ReserveData memory reserveData = IPool(_aavePoolAddress).getReserveData(asset());
 
@@ -126,7 +126,7 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         IPool(_aavePoolAddress).withdraw(
             asset(), 
             amount, 
-            receiver
+            address(this)
         );
         
         // Fire event
