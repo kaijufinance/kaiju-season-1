@@ -16,7 +16,6 @@ abstract contract MultiTokenVaultsUpgradable is Initializable, AccessControlUpgr
     struct UpgradableMultiTokenVaultsUpgradeableStorage 
     {
         mapping(address => TokenVault) vaults;
-        address aaveAddress;
     }
 
     // keccak256(abi.encode(uint256(keccak256("kaijufinance.storage.UpgradableMultiTokenVaultsUpgradeable")) - 1)) & ~bytes32(uint256(0xff))
@@ -26,6 +25,11 @@ abstract contract MultiTokenVaultsUpgradable is Initializable, AccessControlUpgr
     event Deposit(address indexed user, address indexed token, uint256 amount);
     event Withdrawal(address indexed user, address indexed token, uint256 amount);
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
     function _getUpgradableMultiTokenVaultsUpgradeableStorage() private pure returns (UpgradableMultiTokenVaultsUpgradeableStorage storage $) {
         assembly {
             $.slot := UpgradableMultiTokenVaultsUpgradeableStorageLocation
@@ -34,7 +38,13 @@ abstract contract MultiTokenVaultsUpgradable is Initializable, AccessControlUpgr
 
     function __UpgradableMultiTokenVaults_init() internal onlyInitializing 
     {
+        __AccessControl_init();
+        __ReentrancyGuard_init();
+        __Ownable_init(_msgSender());
+        __UUPSUpgradeable_init();
         __UpgradableMultiTokenVaults_init_unchained();
+        
+        _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
     }
 
     function __UpgradableMultiTokenVaults_init_unchained() internal onlyInitializing 
@@ -55,7 +65,7 @@ abstract contract MultiTokenVaultsUpgradable is Initializable, AccessControlUpgr
         emit VaultCreated(token, address(newVault));  
     }*/
 
-    function createVault(address token, address vault) onlyOwner external 
+    function createVault(address token, address payable vault) onlyOwner external 
     {
         UpgradableMultiTokenVaultsUpgradeableStorage storage $ = _getUpgradableMultiTokenVaultsUpgradeableStorage();
 
@@ -93,14 +103,14 @@ abstract contract MultiTokenVaultsUpgradable is Initializable, AccessControlUpgr
         emit Withdrawal(_msgSender(), token, amount);
     }
 
-    function claimRewards(address token, address receiver) onlyOwner external
+    function claimRewards(address token, address receiver, uint256 amount) onlyOwner external
     {
         UpgradableMultiTokenVaultsUpgradeableStorage storage $ = _getUpgradableMultiTokenVaultsUpgradeableStorage();
 
         TokenVault vault = $.vaults[token];
 
         vault.claimYield();
-        vault.withdrawYield(receiver);
+        vault.withdrawTokenYield(receiver, amount);
     }
 
     function addRole(bytes32 role, address account) public onlyOwner {
