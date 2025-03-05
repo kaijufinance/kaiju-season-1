@@ -13,7 +13,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { IPool } from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import { DataTypes } from "@aave/core-v3/contracts/protocol/libraries/types/DataTypes.sol";
 import { IRewardsController } from "@aave/periphery-v3/contracts/rewards/interfaces/IRewardsController.sol";
-import {Math} from "@openzeppelin/contracts/utils/math/Math.sol";
+import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
 
 contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, ReentrancyGuardUpgradeable, UUPSUpgradeable
 {
@@ -51,7 +51,12 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         }
 
         uint256 shares = previewDeposit(assets);
-        _deposit(_msgSender(), receiver, assets, shares);
+        _deposit(
+            _msgSender(), 
+            receiver, 
+            assets, 
+            shares
+        );
 
         _supplyToPool(assets);
 
@@ -65,10 +70,16 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
             revert ERC4626ExceededMaxWithdraw(owner, assets, maxAssets);
         }
 
-        _withdrawFromPool(assets, receiver);
-
         uint256 shares = previewWithdraw(assets);
-        _withdraw(_msgSender(), receiver, owner, assets, shares);
+        _withdraw(
+            _msgSender(), 
+            receiver, 
+            owner, 
+            assets, 
+            shares
+        );
+
+        _withdrawFromPool(assets, receiver);
 
         return shares;
     }
@@ -86,21 +97,27 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         );
     }
 
-    function withdrawYield(address receiver) public onlyOwner {
-        uint amount = address(this).balance;
-        
-        (bool success, ) = payable(receiver).call{value: amount}("");
-        require(success, "Failed to send Ether");
+    function withdrawYield(address receiver, uint256 amount) public onlyOwner 
+    {
+        IERC20(asset()).transfer(receiver, amount);
     }
 
     function _withdrawFromPool(uint256 amount, address receiver) internal  
     {
-        // Appprove IPool to burn lsts
         DataTypes.ReserveData memory reserveData = IPool(_aavePoolAddress).getReserveData(asset());
+
+        uint256 aTokenBalance = IERC20(reserveData.aTokenAddress).balanceOf(address(this));
+        require(aTokenBalance >= amount, "Insufficient aToken balance");
+
+        // Appprove IPool to burn lsts
         IERC20(reserveData.aTokenAddress).approve(_aavePoolAddress, amount);
 
         // Withdraw to user 
-        IPool(_aavePoolAddress).withdraw(asset(), amount, receiver);
+        IPool(_aavePoolAddress).withdraw(
+            asset(), 
+            amount, 
+            receiver
+        );
         
         // Fire event
         emit AAVEWithdrawn(_msgSender(), asset(), amount, address(this));
@@ -110,19 +127,27 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
     {
         // Supply AAVE
         IERC20(asset()).approve(_aavePoolAddress, amount);
-        IPool(_aavePoolAddress).supply(asset(), amount, address(this), 0);
+        IPool(_aavePoolAddress).supply(
+            asset(), 
+            amount, 
+            address(this),
+            0
+        );
 
         // Fire event
         emit AAVESupplied(_msgSender(), asset(), amount, address(this));
     }
 
-    function _convertToShares(uint256 assets, Math.Rounding) internal pure override returns (uint256) {
+    function _convertToShares(uint256 assets, Math.Rounding) internal pure override returns (uint256) 
+    {
         return assets; 
     }
 
-    function _convertToAssets(uint256 shares, Math.Rounding) internal pure override returns (uint256) {
+    function _convertToAssets(uint256 shares, Math.Rounding) internal pure override returns (uint256) 
+    {
         return shares; 
     }
 
-    function _authorizeUpgrade(address newImplementation) internal override(UUPSUpgradeable) onlyOwner {}
+    function _authorizeUpgrade(address newImplementation) internal override(UUPSUpgradeable) onlyOwner 
+    {}
 }
