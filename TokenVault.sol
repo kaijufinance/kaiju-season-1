@@ -9,7 +9,6 @@ import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import { IPool } from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import { DataTypes } from "@aave/core-v3/contracts/protocol/libraries/types/DataTypes.sol";
 import { IRewardsController } from "@aave/periphery-v3/contracts/rewards/interfaces/IRewardsController.sol";
@@ -39,6 +38,7 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         __ERC20_init(name, symbol);
         __ReentrancyGuard_init();
         __Ownable_init(_msgSender());
+        __UUPSUpgradeable_init();
 
         _aavePoolAddress = aavePoolAddress;
         _aaveRewardsControllerAddress = aaveRewardsControllerAddress;
@@ -163,4 +163,6 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
 
     receive() external payable 
     {}
+
+    uint256[50] private __gap;
 }
