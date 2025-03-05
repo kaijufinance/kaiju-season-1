@@ -22,6 +22,11 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
     address public _aavePoolAddress;
     address public _aaveRewardsControllerAddress;
 
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        _disableInitializers();
+    }
+
     function initialize(
         IERC20 asset, 
         string memory name, 
@@ -97,9 +102,14 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         );
     }
 
-    function withdrawYield(address receiver, uint256 amount) public onlyOwner 
+    function withdrawTokenYield(address receiver, uint256 amount) public onlyOwner 
     {
         IERC20(asset()).transfer(receiver, amount);
+    }
+
+    function withdrawNativeYield(address receiver, uint256 amount) public onlyOwner 
+    {
+        payable(receiver).transfer(amount);
     }
 
     function _withdrawFromPool(uint256 amount, address receiver) internal  
@@ -149,5 +159,8 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
     }
 
     function _authorizeUpgrade(address newImplementation) internal override(UUPSUpgradeable) onlyOwner 
+    {}
+
+    receive() external payable 
     {}
 }
