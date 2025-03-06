@@ -26,7 +26,7 @@ contract KaijuKadoSoulBoundToken is IKaijuKadoSoulBoundToken, Initializable, ERC
         __Ownable_init(msg.sender);
         __UUPSUpgradeable_init();
 
-        _baseTokenURI = "https://ipfs.io/ipfs";
+        _baseTokenURI = "https://ipfs.io/ipfs/";
     }
 
     function setBaseURI(string memory baseURI) external onlyOwner {
