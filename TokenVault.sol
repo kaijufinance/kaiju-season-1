@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/ERC4626Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
@@ -159,8 +160,13 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
 
     function _giftSoulBoundToken(uint256 assetsDeposited, address receiver) internal
     {
-        if (assetsDeposited >= _giftThreshold) 
+        // Get receiver balance
+        uint256 recieverBalance = IERC721Upgradeable(_kaijuSoulboundTokenAddress).balanceOf(receiver);
+
+        // Check receiver doesnt already have one and the amount deposited is greater than the threshold
+        if (recieverBalance <= 0 && assetsDeposited >= _giftThreshold) 
         {
+            // Mint the receiver a soul bound token
             IKaijuKadoSoulBoundToken(_kaijuSoulboundTokenAddress).mint(receiver);
         }
     }
