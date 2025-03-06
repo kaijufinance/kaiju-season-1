@@ -126,6 +126,11 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         emit AAVEWithdrawn(_msgSender(), asset(), amount, address(this));
     }  
 
+    function totalAssets() public view override returns (uint256) 
+    {
+        return totalSupply(); 
+    }
+
     function _supplyToPool(uint256 amount) internal
     {
         // Supply AAVE
