@@ -103,7 +103,7 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
 
         // Check to ensure we can only take yield from the contract and NOT users supply
         require(vaultATokenBalance > totalSupply(), 'Nothing to withdraw');
-        require((vaultATokenBalance - totalSupply()) <= amount, 'Amount is larger than can be withdrawn');
+        require((vaultATokenBalance - totalSupply()) >= amount, 'Amount is larger than can be withdrawn');
  
         _withdrawFromPool(amount);
 
