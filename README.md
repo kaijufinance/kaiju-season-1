@@ -36,12 +36,12 @@ Deployers Address: [0x61E8CDFe71851717e5D3382F61Cd70f7B8Dc6039](https://sepolia.
 
 | Contract      | Address       | Network       |
 | ------------- | ------------- | ------------- |
-| Kaiju Kado Soul Bound Token (Upgradable) | [0x269b4c682b68b38d117989f267c08a22ab795f5e](https://sepolia.etherscan.io/address/0x269b4c682b68b38d117989f267c08a22ab795f5e#code)     | Sepolia       | 
-| Kaiju Kado Soul Bound Token Proxy | [0x8b800b4ec8c169c7e49f93a9aa2913e040908125](https://sepolia.etherscan.io/address/0x8b800b4ec8c169c7e49f93a9aa2913e040908125#code)     | Sepolia       | 
+| Kaiju Kado Soul Bound Token (Upgradable) | [0x3256e19f4568ea10ac76f348364931d1c988342b](https://sepolia.etherscan.io/address/0x3256e19f4568ea10ac76f348364931d1c988342b#code)     | Sepolia       | 
+| Kaiju Kado Soul Bound Token Proxy | [0x2871cf297eee43b8c11bb0e2f6025d99c5f51606](https://sepolia.etherscan.io/address/0x2871cf297eee43b8c11bb0e2f6025d99c5f51606#code)     | Sepolia       | 
 | Kaiju Vaults Proxy | [0xbcbd735a5b007a9356824a2dc64cbd0443d9cf89](https://sepolia.etherscan.io/address/0xbcbd735a5b007a9356824a2dc64cbd0443d9cf89#code)     | Sepolia       | 
 | Kaiju Vaults (Upgradable) | [0x6F9D26A8fC01BBa5F1A28345812D578f26d1b93d](https://sepolia.etherscan.io/address/0x6F9D26A8fC01BBa5F1A28345812D578f26d1b93d#code)     | Sepolia       | 
-| Kaiju USDC Token Vault Proxy |  [0x550dbef685ccab2af8e3da79fcf4b223e92c4a2e](https://sepolia.etherscan.io/address/0x550dbef685ccab2af8e3da79fcf4b223e92c4a2e#code)    | Sepolia       | 
-| Kaiju USDC Token Vault (Upgradable) | [0x0050ff7779b0c5c0233c2041054484b3e1d5ea03](https://sepolia.etherscan.io/address/0x0050ff7779b0c5c0233c2041054484b3e1d5ea03#code)     | Sepolia       | 
+| Kaiju USDC Token Vault Proxy |  [](https://sepolia.etherscan.io/address/#code)    | Sepolia       | 
+| Kaiju USDC Token Vault (Upgradable) | [](https://sepolia.etherscan.io/address/#code)     | Sepolia       | 
 | Kaiju WETH Token Vault Proxy | [](https://sepolia.etherscan.io/address/#code)     | Sepolia       | 
 | Kaiju WETH Token Vault (Upgradable) | [](https://sepolia.etherscan.io/address/#code)     | Sepolia       | 
 
