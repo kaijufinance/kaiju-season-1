@@ -12,7 +12,6 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import { IPool } from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import { DataTypes } from "@aave/core-v3/contracts/protocol/libraries/types/DataTypes.sol";
-import { IRewardsController } from "@aave/periphery-v3/contracts/rewards/interfaces/IRewardsController.sol";
 import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
 import { IKaijuKadoSoulBoundToken } from "./interfaces/IKaijuKadoSoulBoundToken.sol";
 
@@ -21,7 +20,6 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
     using Math for uint256;
 
     address private _aavePoolAddress;
-    address private _aaveRewardsControllerAddress;
     address private _kaijuSoulboundTokenAddress;
     uint256 private _giftThreshold;
 
@@ -35,7 +33,6 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         string memory name, 
         string memory symbol, 
         address aavePoolAddress,
-        address aaveRewardsControllerAddress,
         address kaijuSoulboundTokenAddress,
         uint256 giftThreshold
     ) public initializer 
@@ -47,7 +44,6 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         __UUPSUpgradeable_init();
 
         _aavePoolAddress = aavePoolAddress;
-        _aaveRewardsControllerAddress = aaveRewardsControllerAddress;
         _kaijuSoulboundTokenAddress = kaijuSoulboundTokenAddress;
         _giftThreshold = giftThreshold;
     }
@@ -97,19 +93,6 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         );
 
         return shares;
-    }
-
-    function claimYield() public onlyOwner 
-    {
-        address[] memory assets = new address[](1);
-        assets[0] = asset();
-
-        IRewardsController(_aaveRewardsControllerAddress).claimRewards(
-            assets,
-            type(uint256).max,
-            msg.sender,
-            address(this)
-        );
     }
 
     function withdrawTokenYield(address receiver, uint256 amount) public onlyOwner 
