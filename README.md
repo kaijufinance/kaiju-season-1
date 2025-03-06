@@ -38,8 +38,6 @@ Deployers Address: [0x61E8CDFe71851717e5D3382F61Cd70f7B8Dc6039](https://sepolia.
 | ------------- | ------------- | ------------- |
 | Kaiju Kado Soul Bound Token (Upgradable) | [0x3256e19f4568ea10ac76f348364931d1c988342b](https://sepolia.etherscan.io/address/0x3256e19f4568ea10ac76f348364931d1c988342b#code)     | Sepolia       | 
 | Kaiju Kado Soul Bound Token Proxy | [0x2871cf297eee43b8c11bb0e2f6025d99c5f51606](https://sepolia.etherscan.io/address/0x2871cf297eee43b8c11bb0e2f6025d99c5f51606#code)     | Sepolia       | 
-| Kaiju Vaults Proxy | [0xbcbd735a5b007a9356824a2dc64cbd0443d9cf89](https://sepolia.etherscan.io/address/0xbcbd735a5b007a9356824a2dc64cbd0443d9cf89#code)     | Sepolia       | 
-| Kaiju Vaults (Upgradable) | [0x6F9D26A8fC01BBa5F1A28345812D578f26d1b93d](https://sepolia.etherscan.io/address/0x6F9D26A8fC01BBa5F1A28345812D578f26d1b93d#code)     | Sepolia       | 
 | Kaiju USDC Token Vault Proxy |  [0x3d8c0c0b653291cf3dd476d2e46611b9fb42b688](https://sepolia.etherscan.io/address/0x3d8c0c0b653291cf3dd476d2e46611b9fb42b688#code)    | Sepolia       | 
 | Kaiju USDC Token Vault (Upgradable) | [0xf7c169e64094c468b96a549c7fd1d9a5468b120a](https://sepolia.etherscan.io/address/0xf7c169e64094c468b96a549c7fd1d9a5468b120a#code)     | Sepolia       | 
 | Kaiju WETH Token Vault Proxy | [](https://sepolia.etherscan.io/address/#code)     | Sepolia       | 
