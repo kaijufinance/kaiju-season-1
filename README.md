@@ -67,7 +67,7 @@ Step 1. TBC.
 | WBTC (ERC20) |  [0x29f2D40B0605204364af54EC677bD022dA425d03](https://sepolia.etherscan.io/address/0x29f2D40B0605204364af54EC677bD022dA425d03)  | Sepolia       | 
 | aWBTC (ERC20) | [](https://sepolia.etherscan.io/token/#readProxyContract)   | Sepolia       | 
 | WETH (ERC20) |  [0xC558DBdd856501FCd9aaF1E62eae57A9F0629a3c](https://sepolia.etherscan.io/address/0xC558DBdd856501FCd9aaF1E62eae57A9F0629a3c)  | Sepolia       |
-| aWETH (ERC20) | [](https://sepolia.etherscan.io/token/#readProxyContract)   | Sepolia       | 
+| aWETH (ERC20) | [0x5b071b590a59395fE4025A0Ccc1FcC931AAc1830](https://sepolia.etherscan.io/token/0x5b071b590a59395fE4025A0Ccc1FcC931AAc1830#readProxyContract)   | Sepolia       | 
 | AWUSDT (ERC20) |   [0xaA8E23Fb1079EA71e0a56F48a2aA51851D8433D0](https://sepolia.etherscan.io/address/0xaA8E23Fb1079EA71e0a56F48a2aA51851D8433D0) | Sepolia       |
 | aLink (ERC20) | [](https://sepolia.etherscan.io/token/#readProxyContract)   | Sepolia       | 
 | AAVE (ERC20) |  [0x88541670E55cC00bEEFD87eB59EDd1b7C511AC9a](https://sepolia.etherscan.io/address/0x88541670E55cC00bEEFD87eB59EDd1b7C511AC9a)  | Sepolia       |
