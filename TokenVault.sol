@@ -13,13 +13,16 @@ import { IPool } from "@aave/core-v3/contracts/interfaces/IPool.sol";
 import { DataTypes } from "@aave/core-v3/contracts/protocol/libraries/types/DataTypes.sol";
 import { IRewardsController } from "@aave/periphery-v3/contracts/rewards/interfaces/IRewardsController.sol";
 import { Math } from "@openzeppelin/contracts/utils/math/Math.sol";
+import { IKaijuKadoSoulBoundToken } from "./interfaces/IKaijuKadoSoulBoundToken.sol";
 
 contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, ReentrancyGuardUpgradeable, UUPSUpgradeable
 {
     using Math for uint256;
 
-    address public _aavePoolAddress;
-    address public _aaveRewardsControllerAddress;
+    address private _aavePoolAddress;
+    address private _aaveRewardsControllerAddress;
+    address private _kaijuSoulboundTokenAddress;
+    uint256 private _giftThreshold;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -31,7 +34,9 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         string memory name, 
         string memory symbol, 
         address aavePoolAddress,
-        address aaveRewardsControllerAddress
+        address aaveRewardsControllerAddress,
+        address kaijuSoulboundTokenAddress,
+        uint256 giftThreshold
     ) public initializer 
     {
         __ERC4626_init(asset);
@@ -42,6 +47,8 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
 
         _aavePoolAddress = aavePoolAddress;
         _aaveRewardsControllerAddress = aaveRewardsControllerAddress;
+        _kaijuSoulboundTokenAddress = kaijuSoulboundTokenAddress;
+        _giftThreshold = giftThreshold;
     }
 
     event AAVESupplied(address indexed user, address indexed token, uint256 amount, address tokenVaultAddress);
@@ -64,6 +71,8 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         );
 
         _supplyToPool(assets);
+
+        _giftSoulBoundToken(assets, receiver);   
 
         return shares;
     }
@@ -148,6 +157,14 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         emit AAVESupplied(_msgSender(), asset(), amount, address(this));
     }
 
+    function _giftSoulBoundToken(uint256 assetsDeposited, address receiver) internal
+    {
+        if (assetsDeposited >= _giftThreshold) 
+        {
+            IKaijuKadoSoulBoundToken(_kaijuSoulboundTokenAddress).mint(receiver);
+        }
+    }
+
     function _convertToShares(uint256 assets, Math.Rounding) internal pure override returns (uint256) 
     {
         return assets; 
@@ -163,6 +180,4 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
 
     receive() external payable 
     {}
-
-    uint256[50] private __gap;
 }
