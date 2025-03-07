@@ -95,24 +95,46 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         return shares;
     }
 
-    function withdrawTokenYield(address receiver, uint256 amount) public onlyOwner 
+    function withdrawTokenYield(address receiver, uint256 aTokenBalanceToWithdraw) public onlyOwner 
     {
         DataTypes.ReserveData memory reserveData = IPool(_aavePoolAddress).getReserveData(asset());
 
-        uint256 vaultATokenBalance = IERC20(reserveData.aTokenAddress).balanceOf(address(this));
+        uint256 aTokenBalance = IERC20(reserveData.aTokenAddress).balanceOf(address(this));
+        uint256 assetAmount = convertATokensToAsset(aTokenBalance);
 
         // Check to ensure we can only take yield from the contract and NOT users supply
-        require(vaultATokenBalance > totalSupply(), 'Nothing to withdraw');
-        require((vaultATokenBalance - totalSupply()) >= amount, 'Amount is larger than can be withdrawn');
+        require(aTokenBalance > totalSupply(), 'Nothing to withdraw');
+        require((aTokenBalance - totalSupply()) >= aTokenBalanceToWithdraw, 'Amount is larger than can be withdrawn');
  
-        _withdrawFromPool(amount);
+        _withdrawFromPool(assetAmount);
 
-        IERC20(reserveData.aTokenAddress).transfer(receiver, amount);
+        IERC20(reserveData.aTokenAddress).transfer(receiver, assetAmount);
     }
 
-    function withdrawNativeCoin(address receiver, uint256 amount) public onlyOwner 
+    function withdrawNativeCoin(address receiver, uint256 amount) 
+        public onlyOwner 
     {
         payable(receiver).transfer(amount);
+    }
+
+    function getATokensPerAsset()
+        public 
+        view 
+        returns (uint256) 
+    {
+        uint256 exchangeRate = IPool(_aavePoolAddress).getReserveNormalizedIncome(asset());
+
+        return 1e29 / exchangeRate;
+    }
+
+    function convertATokensToAsset(uint256 amount) 
+        public 
+        view 
+        returns (uint256) 
+    {
+        uint256 percent = getATokensPerAsset();
+
+        return ((((amount * 1e4) / 1e2) * percent) / 1e4);
     }
 
     function _withdrawFromPool(uint256 amount) internal  
@@ -171,11 +193,13 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
 
     function _convertToShares(uint256 assets, Math.Rounding) internal pure override returns (uint256) 
     {
+        // 1:1
         return assets; 
     }
 
     function _convertToAssets(uint256 shares, Math.Rounding) internal pure override returns (uint256) 
     {
+        // 1:1
         return shares; 
     }
 
