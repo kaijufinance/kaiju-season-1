@@ -95,20 +95,20 @@ contract TokenVault is Initializable, OwnableUpgradeable, ERC4626Upgradeable, Re
         return shares;
     }
 
-    function withdrawTokenYield(address receiver, uint256 aTokenBalanceToWithdraw) public onlyOwner 
+    function withdrawYieldAsAsset(address receiver, uint256 aTokenBalanceToWithdraw) public onlyOwner 
     {
         DataTypes.ReserveData memory reserveData = IPool(_aavePoolAddress).getReserveData(asset());
 
         uint256 aTokenBalance = IERC20(reserveData.aTokenAddress).balanceOf(address(this));
-        uint256 assetAmount = convertATokensToAsset(aTokenBalance);
+        uint256 assetAmountToWithdraw = convertATokensToAsset(aTokenBalanceToWithdraw);
 
         // Check to ensure we can only take yield from the contract and NOT users supply
         require(aTokenBalance > totalSupply(), 'Nothing to withdraw');
         require((aTokenBalance - totalSupply()) >= aTokenBalanceToWithdraw, 'Amount is larger than can be withdrawn');
  
-        _withdrawFromPool(assetAmount);
+        _withdrawFromPool(assetAmountToWithdraw);
 
-        IERC20(reserveData.aTokenAddress).transfer(receiver, assetAmount);
+        IERC20(asset()).transfer(receiver, assetAmountToWithdraw);
     }
 
     function withdrawNativeCoin(address receiver, uint256 amount) 
